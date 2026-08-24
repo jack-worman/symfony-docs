@@ -998,8 +998,7 @@ handle a message only once, you can use the ``processOnlyLastMissedRun`` option:
         }
     }
 
-To scale your schedules more effectively, you can use multiple workers. In such
-cases, a good practice is to add a :doc:`lock </components/lock>` to prevent the
+When multiple workers are processing your schedule, you should add a :doc:`lock </components/lock>` to prevent the
 same task more than once::
 
     // src/Scheduler/SaleTaskProvider.php
@@ -1019,6 +1018,11 @@ same task more than once::
                 ->lock($this->lockFactory->createLock('my-lock'));
         }
     }
+
+.. tip::
+
+    Having multiple workers process a schedule at the same time does not increase throughput since the lock is
+    per-schedule and not per-task.
 
 .. tip::
 
